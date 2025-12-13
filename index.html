@@ -1,4 +1,4 @@
-<!-- 2025-12-13T21:50+09:00 master_manager.html -->
+<!-- 2025-12-13T22:05+09:00 master_manager.html -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -45,12 +45,6 @@
       box-sizing: border-box;
     }
 
-    .card-title {
-      font-weight: bold;
-      font-size: 13px;
-      margin-bottom: 4px;
-    }
-
     label {
       font-size: 13px;
     }
@@ -76,16 +70,7 @@
       opacity: 0.6;
     }
 
-    .inline {
-      display: inline-block;
-      vertical-align: middle;
-    }
-
-    .spacer {
-      height: 4px;
-    }
-
-    /* ===== データソース選択エリア（折りたたみ） ===== */
+    /* ===== パネル共通 ===== */
     .panel-wrapper {
       margin-top: 4px;
       margin-bottom: 8px;
@@ -128,11 +113,9 @@
     #ds-toggle + .panel-header span.arrow::before {
       content: "▶";
     }
-
     #ds-toggle:checked + .panel-header span.arrow::before {
       content: "▼";
     }
-
     #ds-toggle:checked + .panel-header + .panel-body {
       display: block;
     }
@@ -141,13 +124,18 @@
     #panel-toggle + .panel-header span.arrow::before {
       content: "▶";
     }
-
     #panel-toggle:checked + .panel-header span.arrow::before {
       content: "▼";
     }
-
     #panel-toggle:checked + .panel-header + .panel-body {
       display: block;
+    }
+
+    /* ===== データ元ヘッダ（1行） ===== */
+    .ds-header {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
     }
 
     .ds-header .ds-current {
@@ -155,9 +143,9 @@
       font-weight: normal;
       font-size: 12px;
       color: #555;
-      white-space: nowrap;
     }
 
+    /* ===== データソース選択エリア ===== */
     .datasource-row {
       display: flex;
       flex-wrap: wrap;
@@ -199,39 +187,40 @@
       color: #555;
     }
 
-    /* ===== ツールバー ===== */
+    /* ===== ツールバー（検索・操作） ===== */
     .toolbar {
       display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 6px;
-      row-gap: 4px;
+      flex-direction: column;
+      gap: 4px;
       font-size: 13px;
     }
 
-    .toolbar .search-label {
+    .toolbar-row1,
+    .toolbar-row2 {
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+      gap: 4px;
+    }
+
+    .toolbar-row1 .search-label {
       font-weight: bold;
     }
 
-    .toolbar .search-input {
+    .toolbar-row1 .search-input {
       width: 260px;
       max-width: 50vw;
     }
 
-    .toolbar .toolbar-right {
-      margin-left: auto;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
+    .toolbar-row2 button {
+      margin-right: 2px;
     }
 
-    .toolbar .status-text {
+    .toolbar-row2 .status-text {
       font-size: 12px;
       color: #555;
-      margin-left: 4px;
-      white-space: nowrap;
+      margin-left: 10px;
     }
 
     /* ===== 一覧テーブル ===== */
@@ -370,27 +359,22 @@
       .page-wrapper {
         padding: 6px 6px 24px;
       }
-      .datasource-row .load-button,
-      .toolbar .toolbar-right {
+      .datasource-row .load-button {
         width: 100%;
         justify-content: flex-start;
         margin-left: 0;
       }
-      .toolbar .search-input {
+      .toolbar-row1,
+      .toolbar-row2 {
+        flex-wrap: wrap;
+        white-space: normal;
+      }
+      .toolbar-row1 .search-input {
         width: 100%;
         max-width: 100%;
       }
-      .toolbar {
-        gap: 4px;
-      }
       .table-scroll {
         max-height: 260px;
-      }
-      .ds-header .ds-current {
-        display: block;
-        margin-left: 18px;
-        margin-top: 2px;
-        white-space: normal;
       }
     }
   </style>
@@ -498,15 +482,18 @@
       </div>
     </div>
 
-    <!-- ツールバー（検索） -->
+    <!-- ツールバー（検索＋操作） -->
     <div class="card">
       <div class="toolbar">
-        <span class="search-label">検索:</span>
-        <input type="text" class="search-input" placeholder="業者名・住所・電話などを入力">
-        <button>検索</button>
-        <button>クリア</button>
-
-        <div class="toolbar-right">
+        <!-- 1行目：検索: テキスト + 検索 -->
+        <div class="toolbar-row1">
+          <span class="search-label">検索:</span>
+          <input type="text" class="search-input" placeholder="業者名・住所・電話などを入力">
+          <button>検索</button>
+        </div>
+        <!-- 2行目：クリア 再読込 CSVダウンロード 印刷 -->
+        <div class="toolbar-row2">
+          <button>クリア</button>
           <button>再読込</button>
           <button>CSVダウンロード</button>
           <button>印刷</button>
@@ -568,7 +555,7 @@
     <div class="footer">
       <div>
         データ元：SharePointリスト『後払可能業者一覧』 /
-        Webルート：/n/N/N/H/s /
+        Webルート：/n/N/N/H/sy /
         API：/n/N/N/H/s/_api
         <div class="footer-note">
           ※CSVモードでは、編集結果は「CSVダウンロード」ボタンでのみファイルに保存されます。
