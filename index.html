@@ -1,4 +1,4 @@
-<!-- 2025-12-13T22:15+09:00 master_manager.html -->
+<!-- 2025-12-13T22:25+09:00 master_manager.html -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -208,10 +208,9 @@
       font-weight: bold;
     }
 
-    /* ★検索テキストボックスを半分の幅に変更（260→130） */
-    .toolbar-row1 .search-input {
+    /* 検索テキストボックス：幅を小さめ (130px) に固定 */
+    .search-input {
       width: 130px;
-      max-width: 25vw;
     }
 
     .toolbar-row2 button {
@@ -370,9 +369,8 @@
         flex-wrap: wrap;
         white-space: normal;
       }
-      .toolbar-row1 .search-input {
+      .search-input {
         width: 100%;
-        max-width: 100%;
       }
       .table-scroll {
         max-height: 260px;
@@ -409,7 +407,7 @@
             </select>
           </label>
 
-          <!-- CSV選択（見た目だけ。実際の切替は後でJSで制御） -->
+          <!-- CSV選択（見た目だけ） -->
           <label>CSV種別:
             <select class="select-medium">
               <option>DocLib内CSV</option>
