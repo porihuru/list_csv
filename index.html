@@ -1,4 +1,4 @@
-<!-- 2025-12-13T22:05+09:00 master_manager.html -->
+<!-- 2025-12-13T22:15+09:00 master_manager.html -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -208,9 +208,10 @@
       font-weight: bold;
     }
 
+    /* ★検索テキストボックスを半分の幅に変更（260→130） */
     .toolbar-row1 .search-input {
-      width: 260px;
-      max-width: 50vw;
+      width: 130px;
+      max-width: 25vw;
     }
 
     .toolbar-row2 button {
@@ -430,7 +431,7 @@
       </div>
     </div>
 
-    <!-- 管理パネル（追加・修正・削除） ※検索の上に配置 -->
+    <!-- 管理パネル（追加・修正・削除） -->
     <div class="panel-wrapper">
       <input type="checkbox" id="panel-toggle">
       <label class="panel-header" for="panel-toggle">
@@ -485,13 +486,13 @@
     <!-- ツールバー（検索＋操作） -->
     <div class="card">
       <div class="toolbar">
-        <!-- 1行目：検索: テキスト + 検索 -->
+        <!-- 1行目：検索 -->
         <div class="toolbar-row1">
           <span class="search-label">検索:</span>
           <input type="text" class="search-input" placeholder="業者名・住所・電話などを入力">
           <button>検索</button>
         </div>
-        <!-- 2行目：クリア 再読込 CSVダウンロード 印刷 -->
+        <!-- 2行目：クリア・再読込・CSVダウンロード・印刷 -->
         <div class="toolbar-row2">
           <button>クリア</button>
           <button>再読込</button>
@@ -545,7 +546,6 @@
               <td>滝川駐屯地会計隊</td>
               <td>備考なし</td>
             </tr>
-            <!-- サンプル行を必要に応じて増やす -->
           </tbody>
         </table>
       </div>
@@ -555,8 +555,8 @@
     <div class="footer">
       <div>
         データ元：SharePointリスト『後払可能業者一覧』 /
-        Webルート：/n/N/N/H/sy /
-        API：/n/N/N/H/s/_api
+        Webルート：/n /
+        API：/n_api
         <div class="footer-note">
           ※CSVモードでは、編集結果は「CSVダウンロード」ボタンでのみファイルに保存されます。
         </div>
