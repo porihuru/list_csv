@@ -1,4 +1,4 @@
-<!-- 2025-12-13T21:30+09:00 master_manager.html -->
+<!-- 2025-12-13T21:50+09:00 master_manager.html -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -85,7 +85,79 @@
       height: 4px;
     }
 
-    /* ===== データソース選択エリア ===== */
+    /* ===== データソース選択エリア（折りたたみ） ===== */
+    .panel-wrapper {
+      margin-top: 4px;
+      margin-bottom: 8px;
+    }
+
+    #ds-toggle,
+    #panel-toggle {
+      display: none;
+    }
+
+    .panel-header {
+      display: block;
+      padding: 4px 8px;
+      background-color: #e0ecff;
+      border: 1px solid #99bbee;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 13px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .panel-header span.arrow {
+      margin-right: 4px;
+      font-size: 10px;
+    }
+
+    .panel-body {
+      display: none;
+      border: 1px solid #99bbee;
+      border-top: none;
+      border-radius: 0 0 4px 4px;
+      padding: 8px;
+      background-color: #fff;
+      box-sizing: border-box;
+      margin-top: -2px;
+    }
+
+    /* データ元パネルの開閉 */
+    #ds-toggle + .panel-header span.arrow::before {
+      content: "▶";
+    }
+
+    #ds-toggle:checked + .panel-header span.arrow::before {
+      content: "▼";
+    }
+
+    #ds-toggle:checked + .panel-header + .panel-body {
+      display: block;
+    }
+
+    /* 追加・修正・削除パネルの開閉 */
+    #panel-toggle + .panel-header span.arrow::before {
+      content: "▶";
+    }
+
+    #panel-toggle:checked + .panel-header span.arrow::before {
+      content: "▼";
+    }
+
+    #panel-toggle:checked + .panel-header + .panel-body {
+      display: block;
+    }
+
+    .ds-header .ds-current {
+      margin-left: 8px;
+      font-weight: normal;
+      font-size: 12px;
+      color: #555;
+      white-space: nowrap;
+    }
+
     .datasource-row {
       display: flex;
       flex-wrap: wrap;
@@ -168,6 +240,7 @@
       border: 1px solid #ccc;
       border-radius: 4px;
       overflow: hidden;
+      margin-top: 8px;
       margin-bottom: 8px;
     }
 
@@ -225,56 +298,7 @@
       font-weight: bold;
     }
 
-    /* ===== 管理パネル（折りたたみ） ===== */
-    .panel-wrapper {
-      margin-top: 4px;
-    }
-
-    #panel-toggle {
-      display: none;
-    }
-
-    .panel-header {
-      display: block;
-      padding: 4px 8px;
-      background-color: #e0ecff;
-      border: 1px solid #99bbee;
-      border-radius: 4px;
-      font-weight: bold;
-      font-size: 13px;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .panel-header span.arrow {
-      margin-right: 4px;
-      font-size: 10px;
-    }
-
-    .panel-body {
-      display: none;
-      border: 1px solid #99bbee;
-      border-top: none;
-      border-radius: 0 0 4px 4px;
-      padding: 8px;
-      background-color: #fff;
-      box-sizing: border-box;
-      margin-top: -2px;
-    }
-
-    #panel-toggle:checked + .panel-header + .panel-body {
-      display: block;
-    }
-
-    /* チェック状態で矢印を変える */
-    #panel-toggle + .panel-header span.arrow::before {
-      content: "▶";
-    }
-
-    #panel-toggle:checked + .panel-header span.arrow::before {
-      content: "▼";
-    }
-
+    /* ===== 管理パネル（追加・修正・削除） ===== */
     .form-grid {
       display: flex;
       flex-wrap: wrap;
@@ -362,6 +386,12 @@
       .table-scroll {
         max-height: 260px;
       }
+      .ds-header .ds-current {
+        display: block;
+        margin-left: 18px;
+        margin-top: 2px;
+        white-space: normal;
+      }
     }
   </style>
 </head>
@@ -370,47 +400,105 @@
     <h1 class="page-title">多目的マスタ管理ツール（SharePoint / CSV 共通版）</h1>
     <div class="page-meta">v2025.12 / 最終更新: 2025-12-13</div>
 
-    <!-- データソース選択 -->
-    <div class="card">
-      <div class="card-title">データ元の選択</div>
-      <div class="datasource-row">
-        <span class="group-label">データ元:</span>
-        <div class="radio-group">
-          <label><input type="radio" name="ds-type" checked> SharePointリスト</label>
-          <label><input type="radio" name="ds-type"> CSVファイル</label>
+    <!-- データ元の選択（折りたたみ） -->
+    <div class="panel-wrapper">
+      <input type="checkbox" id="ds-toggle" checked>
+      <label class="panel-header ds-header" for="ds-toggle">
+        <span class="arrow"></span>データ元の選択
+        <span class="ds-current">（現在：SharePointリスト『後払可能業者一覧』）</span>
+      </label>
+      <div class="panel-body">
+        <div class="datasource-row">
+          <span class="group-label">データ元:</span>
+          <div class="radio-group">
+            <label><input type="radio" name="ds-type" checked> SharePointリスト</label>
+            <label><input type="radio" name="ds-type"> CSVファイル</label>
+          </div>
+
+          <!-- SharePointリスト選択 -->
+          <label>リスト:
+            <select class="select-medium">
+              <option>後払可能業者一覧</option>
+              <option>前払可能業者一覧</option>
+              <option>物品マスタ</option>
+            </select>
+          </label>
+
+          <!-- CSV選択（見た目だけ。実際の切替は後でJSで制御） -->
+          <label>CSV種別:
+            <select class="select-medium">
+              <option>DocLib内CSV</option>
+              <option>ローカルアップロード</option>
+            </select>
+          </label>
+
+          <span class="file-input">
+            <input type="file">
+          </span>
+
+          <span class="load-button">
+            <button>読込</button>
+          </span>
         </div>
-
-        <!-- SharePointリスト選択 -->
-        <label>リスト:
-          <select class="select-medium">
-            <option>後払可能業者一覧</option>
-            <option>前払可能業者一覧</option>
-            <option>物品マスタ</option>
-          </select>
-        </label>
-
-        <!-- CSV選択（見た目だけ。実際の切替は後でJSで制御） -->
-        <label>CSV種別:
-          <select class="select-medium">
-            <option>DocLib内CSV</option>
-            <option>ローカルアップロード</option>
-          </select>
-        </label>
-
-        <span class="file-input">
-          <input type="file">
-        </span>
-
-        <span class="load-button">
-          <button>読込</button>
-        </span>
-      </div>
-      <div class="datasource-status">
-        現在のデータ元：SharePointリスト『後払可能業者一覧』 / スキーマ：VendorMaster
+        <div class="datasource-status">
+          現在のデータ元：SharePointリスト『後払可能業者一覧』 / スキーマ：VendorMaster
+        </div>
       </div>
     </div>
 
-    <!-- ツールバー -->
+    <!-- 管理パネル（追加・修正・削除） ※検索の上に配置 -->
+    <div class="panel-wrapper">
+      <input type="checkbox" id="panel-toggle">
+      <label class="panel-header" for="panel-toggle">
+        <span class="arrow"></span>データの追加・修正・削除
+      </label>
+      <div class="panel-body">
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="fld-category">カテゴリ</label>
+            <input type="text" id="fld-category">
+          </div>
+          <div class="form-field">
+            <label for="fld-vendor">業者名</label>
+            <input type="text" id="fld-vendor">
+          </div>
+          <div class="form-field">
+            <label for="fld-address">住所</label>
+            <input type="text" id="fld-address">
+          </div>
+          <div class="form-field">
+            <label for="fld-phone">電話番号</label>
+            <input type="text" id="fld-phone">
+          </div>
+          <div class="form-field">
+            <label for="fld-contact">担当者</label>
+            <input type="text" id="fld-contact">
+          </div>
+          <div class="form-field">
+            <label for="fld-accounting">入力会計隊</label>
+            <input type="text" id="fld-accounting">
+          </div>
+          <div class="form-field" style="flex-basis: 100%;">
+            <label for="fld-notes">備考</label>
+            <textarea id="fld-notes"></textarea>
+          </div>
+        </div>
+
+        <div class="panel-actions">
+          <div class="panel-actions-left">
+            <button>追加</button>
+            <button>修正</button>
+            <button>削除</button>
+            <button>選択解除</button>
+          </div>
+          <div class="panel-actions-right">
+            現在選択中ID：123 / 最終更新：2025/12/13 14:32
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ツールバー（検索） -->
     <div class="card">
       <div class="toolbar">
         <span class="search-label">検索:</span>
@@ -476,64 +564,12 @@
       </div>
     </div>
 
-    <!-- 管理パネル（追加・修正・削除） -->
-    <div class="panel-wrapper">
-      <input type="checkbox" id="panel-toggle">
-      <label class="panel-header" for="panel-toggle">
-        <span class="arrow"></span>データの追加・修正・削除
-      </label>
-      <div class="panel-body">
-        <div class="form-grid">
-          <div class="form-field">
-            <label for="fld-category">カテゴリ</label>
-            <input type="text" id="fld-category">
-          </div>
-          <div class="form-field">
-            <label for="fld-vendor">業者名</label>
-            <input type="text" id="fld-vendor">
-          </div>
-          <div class="form-field">
-            <label for="fld-address">住所</label>
-            <input type="text" id="fld-address">
-          </div>
-          <div class="form-field">
-            <label for="fld-phone">電話番号</label>
-            <input type="text" id="fld-phone">
-          </div>
-          <div class="form-field">
-            <label for="fld-contact">担当者</label>
-            <input type="text" id="fld-contact">
-          </div>
-          <div class="form-field">
-            <label for="fld-accounting">入力会計隊</label>
-            <input type="text" id="fld-accounting">
-          </div>
-          <div class="form-field" style="flex-basis: 100%;">
-            <label for="fld-notes">備考</label>
-            <textarea id="fld-notes"></textarea>
-          </div>
-        </div>
-
-        <div class="panel-actions">
-          <div class="panel-actions-left">
-            <button>追加</button>
-            <button>修正</button>
-            <button>削除</button>
-            <button>選択解除</button>
-          </div>
-          <div class="panel-actions-right">
-            現在選択中ID：123 / 最終更新：2025/12/13 14:32
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- フッター -->
     <div class="footer">
       <div>
         データ元：SharePointリスト『後払可能業者一覧』 /
         Webルート：/n/N/N/H/s /
-        API：/n/N/N/HQ/sy/_api
+        API：/n/N/N/H/s/_api
         <div class="footer-note">
           ※CSVモードでは、編集結果は「CSVダウンロード」ボタンでのみファイルに保存されます。
         </div>
